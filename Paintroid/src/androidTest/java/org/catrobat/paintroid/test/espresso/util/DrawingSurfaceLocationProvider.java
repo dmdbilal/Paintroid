@@ -29,7 +29,6 @@ import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import androidx.test.espresso.action.CoordinatesProvider;
 
 import static org.catrobat.paintroid.test.espresso.util.MainActivityHelper.getMainActivityFromView;
-import static org.catrobat.paintroid.test.espresso.util.PositionCoordinatesProvider.calculateViewOffset;
 
 public enum DrawingSurfaceLocationProvider implements CoordinatesProvider {
 	MIDDLE {
@@ -153,7 +152,8 @@ public enum DrawingSurfaceLocationProvider implements CoordinatesProvider {
 			Workspace workspace = mainActivity.workspace;
 			PointF toolPosition = ((BaseToolWithShape) mainActivity.toolReference.getTool()).toolPosition;
 			PointF point = workspace.getSurfacePointFromCanvasPoint(toolPosition);
-			return calculateViewOffset(view, point.x, point.y);
+			PositionCoordinatesProvider positionCoordinatesProvider = new PositionCoordinatesProvider(point.x, point.y);
+			return positionCoordinatesProvider.calculateViewOffset(view, point.x, point.y);
 		}
 	};
 
@@ -163,6 +163,7 @@ public enum DrawingSurfaceLocationProvider implements CoordinatesProvider {
 		float pointX = workspace.getWidth() * percentageX;
 		float pointY = workspace.getHeight() * percentageY;
 		PointF point = workspace.getSurfacePointFromCanvasPoint(new PointF(pointX, pointY));
-		return calculateViewOffset(view, point.x, point.y);
+		PositionCoordinatesProvider positionCoordinatesProvider = new PositionCoordinatesProvider(point.x, point.y);
+		return positionCoordinatesProvider.calculateViewOffset(view, point.x, point.y);
 	}
 }

@@ -41,7 +41,7 @@ import org.junit.runner.RunWith;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import static org.catrobat.paintroid.test.espresso.util.OffsetLocationProvider.withOffset;
+import org.catrobat.paintroid.test.espresso.util.OffsetLocationProvider;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ShapeToolOptionsViewInteraction.onShapeToolOptionsView;
@@ -63,11 +63,13 @@ public class ShapeToolIntegrationTest {
 
 	private ToolReference toolReference;
 	private MainActivity mainActivity;
+	private OffsetLocationProvider offsetLocationProvider = new OffsetLocationProvider(BitmapLocationProvider.MIDDLE, 0, 0);
 
 	@Before
 	public void setUp() {
 		mainActivity = launchActivityRule.getActivity();
 		toolReference = mainActivity.toolReference;
+
 
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
@@ -97,8 +99,8 @@ public class ShapeToolIntegrationTest {
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
-				.checkPixelColor(Color.BLACK, withOffset(BitmapLocationProvider.MIDDLE, (int) (rectHeight / 2.5f), 0))
-				.checkPixelColor(Color.TRANSPARENT, withOffset(BitmapLocationProvider.MIDDLE, (int) (rectHeight / 2.5f), (int) (rectHeight / 2.5f)));
+				.checkPixelColor(Color.BLACK, offsetLocationProvider.withOffset(BitmapLocationProvider.MIDDLE, (int) (rectHeight / 2.5f), 0))
+				.checkPixelColor(Color.TRANSPARENT, offsetLocationProvider.withOffset(BitmapLocationProvider.MIDDLE, (int) (rectHeight / 2.5f), (int) (rectHeight / 2.5f)));
 	}
 
 	@Test

@@ -58,6 +58,8 @@ open class DrawingSurfaceListener(
     private var autoScroll = true
     private var timerStartDraw = 0.toLong()
     private lateinit var zoomController: ZoomWindowController
+    private var surfaceX: Float = 0f
+    private var surfaceY: Float = 0f
 
     private var recentTouchEventsData: MutableList<TouchEventData> = mutableListOf()
 
@@ -173,7 +175,14 @@ open class DrawingSurfaceListener(
         canvasTouchPoint.y = event.y
         eventTouchPoint.x = canvasTouchPoint.x
         eventTouchPoint.y = canvasTouchPoint.y
+
+        // Surface coordinates
+        surfaceX = canvasTouchPoint.x
+        surfaceY = canvasTouchPoint.y
+
+//        println("1.canvasTouchPoint x: ${canvasTouchPoint.x} y: ${canvasTouchPoint.y}")
         callback.convertToCanvasFromSurface(canvasTouchPoint)
+//        println("2.canvasTouchPoint x: ${canvasTouchPoint.x} y: ${canvasTouchPoint.y}")
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 if (eventTouchPoint.x < drawerEdgeSize || view.getWidth() - eventTouchPoint.x < drawerEdgeSize) {
@@ -234,6 +243,8 @@ open class DrawingSurfaceListener(
         drawingSurface.refreshDrawingSurface()
         return true
     }
+
+    fun getSurfaceCoord(): PointF = PointF(surfaceX, surfaceY)
 
     private fun removeObsoleteTouchEventsData(timeStamp: Long) {
         val obsoleteTouchEventsData: MutableList<TouchEventData> = ArrayList()

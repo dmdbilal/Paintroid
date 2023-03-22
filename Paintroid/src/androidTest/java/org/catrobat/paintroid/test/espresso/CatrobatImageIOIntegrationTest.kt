@@ -21,9 +21,8 @@
 package org.catrobat.paintroid.test.espresso
 
 import android.net.Uri
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.Espresso.*
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers
@@ -91,22 +90,24 @@ class CatrobatImageIOIntegrationTest {
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
         onView(withText(R.string.menu_save_image))
-            .perform(ViewActions.click())
+            .perform(click())
+        onView(withId(R.id.pocketpaint_image_name_save_text))
+            .perform(replaceText(IMAGE_NAME))
         onView(withId(R.id.pocketpaint_save_dialog_spinner))
-            .perform(ViewActions.click())
-        Espresso.onData(
+            .perform(click())
+        onData(
             AllOf.allOf(
                 Matchers.`is`(Matchers.instanceOf<Any>(String::class.java)),
                 Matchers.`is`<String>(FileIO.FileType.CATROBAT.value)
             )
-        ).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
+        ).inRoot(RootMatchers.isPlatformPopup()).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText(IMAGE_NAME))
         onView(withText(R.string.save_button_text)).check(matches(isDisplayed()))
-            .perform(ViewActions.click())
+            .perform(click())
         onView(withText(R.string.overwrite_button_text)).check(matches(isDisplayed()))
-            .perform(ViewActions.click())
-        uriFile = activity.model.savedPictureUri!!
+            .perform(click())
+        uriFile = activity.model.savedPictureUri
         Assert.assertNotNull(uriFile)
         Assert.assertNotNull(CommandSerializer(activity, activity.commandManager, activity.model).readFromFile(uriFile!!))
     }

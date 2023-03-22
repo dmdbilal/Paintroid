@@ -28,13 +28,17 @@ import androidx.test.espresso.action.CoordinatesProvider
 class PositionCoordinatesProvider(private val xCoordinate: Float, private val yCoordinate: Float) : CoordinatesProvider {
     override fun calculateCoordinates(view: View): FloatArray = calculateViewOffset(view, xCoordinate, yCoordinate)
 
-    fun at(x: Float, y: Float): CoordinatesProvider = PositionCoordinatesProvider(x, y)
+    companion object {
+        fun at(x: Float, y: Float): CoordinatesProvider = PositionCoordinatesProvider(x, y)
+    }
 
     fun calculateViewOffset(view: View, x: Float, y: Float): FloatArray {
         val screenLocation = IntArray(2)
         view.getLocationOnScreen(screenLocation)
+//        println("1. Screenlocation: ${screenLocation[0]}, ${screenLocation[1]}")
         val touchX = screenLocation[0] + x
         val touchY = screenLocation[1] + y
+//        println("2. Screenlocation: ${touchX}, ${touchY}")
         return floatArrayOf(touchX, touchY)
     }
 }

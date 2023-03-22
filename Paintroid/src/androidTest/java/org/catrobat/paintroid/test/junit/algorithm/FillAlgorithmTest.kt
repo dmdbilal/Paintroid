@@ -19,6 +19,7 @@
 package org.catrobat.paintroid.test.junit.algorithm
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.Point
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithm

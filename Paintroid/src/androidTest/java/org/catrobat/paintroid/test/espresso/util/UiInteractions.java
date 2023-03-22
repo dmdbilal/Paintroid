@@ -183,7 +183,7 @@ public final class UiInteractions {
 
 	public static ViewAction touchAt(final float x, final float y, final Tapper tapStyle) {
 		return actionWithAssertions(
-				new GeneralClickAction(tapStyle, PositionCoordinatesProvider.at(x, y), Press.FINGER, 0, 0)
+				new GeneralClickAction(tapStyle, PositionCoordinatesProvider.Companion.at(x, y), Press.FINGER, 0, 0)
 		);
 	}
 
@@ -216,7 +216,7 @@ public final class UiInteractions {
 	}
 
 	public static ViewAction swipe(int startX, int startY, int endX, int endY) {
-		return swipe(PositionCoordinatesProvider.at(startX, startY), PositionCoordinatesProvider.at(endX, endY));
+		return swipe(PositionCoordinatesProvider.Companion.at(startX, startY), PositionCoordinatesProvider.Companion.at(endX, endY));
 	}
 
 	public static ViewAction swipe(CoordinatesProvider startCoordinatesProvider, CoordinatesProvider endCoordinatesProvider) {

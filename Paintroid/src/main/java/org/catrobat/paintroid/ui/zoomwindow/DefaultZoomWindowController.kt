@@ -13,36 +13,38 @@ import android.graphics.Shader
 import android.graphics.Matrix
 import android.graphics.PointF
 import android.graphics.RectF
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.annotation.RequiresApi
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.listener.DrawingSurfaceListener
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import kotlin.math.roundToInt
 
-class DefaultZoomWindowController
-    (val activity: MainActivity,
+class DefaultZoomWindowController(
+    val activity: MainActivity,
     val layerModel: LayerContracts.Model,
     val workspace: Workspace,
-    val toolReference: ToolReference) :
-    ZoomWindowController {
+    val toolReference: ToolReference
+) : ZoomWindowController {
 
     private val canvasRect = Rect()
     private val checkeredPattern = Paint()
     private val framePaint = Paint()
 
-    private val windowHeight =
-        activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_height)
-    private val windowWidth =
-        activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_width)
+    private val windowHeight = activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_height)
+    private val windowWidth = activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_width)
 
-    private val chequeredBackgroundBitmap =
-        Bitmap.createBitmap(layerModel.width, layerModel.height, Bitmap.Config.ARGB_8888)
+    private val chequeredBackgroundBitmap = Bitmap.createBitmap(layerModel.width, layerModel.height, Bitmap.Config.ARGB_8888)
 
     private val greyBackgroundBitmap =
         Bitmap.createBitmap(
@@ -83,19 +85,24 @@ class DefaultZoomWindowController
         val canvasBackground = Canvas(backgroundBitmap)
 
         canvasBackground.drawBitmap(greyBackgroundBitmap, Matrix(), null)
-        canvasBackground.drawBitmap(
-            chequeredBackgroundBitmap, windowWidth / 2f, windowHeight / 2f, null)
+        canvasBackground.drawBitmap(chequeredBackgroundBitmap, windowWidth / 2f, windowHeight / 2f, null)
     }
 
-    private val zoomWindow: RelativeLayout =
-        activity.findViewById(R.id.pocketpaint_zoom_window)
-    private val zoomWindowImage: ImageView =
-        activity.findViewById(R.id.pocketpaint_zoom_window_image)
+    private val zoomWindow: RelativeLayout = activity.findViewById(R.id.pocketpaint_zoom_window)
+    private val zoomWindowImage: ImageView = activity.findViewById(R.id.pocketpaint_zoom_window_image)
     private var coordinates: PointF? = null
 
     override fun show(coordinates: PointF) {
+        val X = coordinates.x
+        val Y = coordinates.y
+
+        val location = IntArray(2)
+        zoomWindow.getLocationOnScreen(location)
+        println("X: ${location[0]} Y: ${location[1]}")
+        println("coX: X: $X Y: $Y")
+
         if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) != Constants.NOT_COMPATIBLE &&
-            isPointOnCanvas(coordinates.x, coordinates.y)) {
+            isPointOnCanvas(X, Y)) {
             if (shouldBeInTheRight(coordinates = coordinates)) {
                 setLayoutAlignment(right = true)
             } else {
@@ -114,6 +121,7 @@ class DefaultZoomWindowController
         zoomWindow.visibility = View.GONE
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onMove(coordinates: PointF) {
         if (shouldBeInTheRight(coordinates = coordinates)) {
             setLayoutAlignment(right = true)
@@ -180,7 +188,8 @@ class DefaultZoomWindowController
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
 
         bitmapWithBackground?.let {
-            canvas?.drawBitmap(it,
+            canvas?.drawBitmap(
+                it,
                 Rect(startX, startY, startX + windowWidth, startY + windowHeight),
                 rect,
                 paint

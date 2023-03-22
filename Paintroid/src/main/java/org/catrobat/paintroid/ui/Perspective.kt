@@ -201,6 +201,7 @@ open class Perspective(private var bitmapWidth: Int, private var bitmapHeight: I
 
     @Synchronized
     fun convertToCanvasFromSurface(surfacePoint: PointF) {
+//        println("spx: ${surfacePoint.x} scx: $surfaceCenterX ss: $surfaceScale scx: $surfaceCenterX stx: $surfaceTranslationX")
         surfacePoint.x =
             (surfacePoint.x - surfaceCenterX) / surfaceScale + surfaceCenterX - surfaceTranslationX
         surfacePoint.y =

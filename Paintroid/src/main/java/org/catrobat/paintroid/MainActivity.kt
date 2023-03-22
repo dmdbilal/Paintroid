@@ -441,6 +441,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             applicationContext
         )
         perspective = Perspective(layerModel.width, layerModel.height)
+        println("layerModel.width: ${layerModel.width}, layerModel.height: ${layerModel.height}")
         val listener = DefaultWorkspace.Listener { drawingSurface.refreshDrawingSurface() }
         model = MainActivityModel()
         workspace = DefaultWorkspace(
